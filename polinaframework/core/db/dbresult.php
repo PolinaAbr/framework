@@ -1,6 +1,6 @@
 <?php
 
-namespace polinaframework\core\db;
+namespace Polinaframework\Core\DB;
 
 class DBResult {
     private $result = null;

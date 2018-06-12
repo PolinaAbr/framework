@@ -1,10 +1,10 @@
 <?php
 
-namespace polinaframework\core\tables;
-use polinaframework\core\db\Table;
-use polinaframework\core\db\validators\Length;
-use polinaframework\core\db\validators\Type;
-use polinaframework\core\db\validators\Unique;
+namespace Polinaframework\Core\Tables;
+use Polinaframework\Core\DB\Table;
+use Polinaframework\Core\DB\Validators\Length;
+use Polinaframework\Core\DB\Validators\Type;
+use Polinaframework\Core\DB\Validators\Unique;
 
 class UserTable extends Table {
 

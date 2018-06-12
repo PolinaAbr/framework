@@ -1,8 +1,8 @@
 <?php
 
-namespace auth;
-use polinaframework\core\db\DB;
-use polinaframework\core\tables\UserTable;
+namespace Auth;
+use Polinaframework\Core\DB\DB;
+use Polinaframework\Core\Tables\UserTable;
 
 class User {
     public  $login = false;

@@ -1,14 +1,14 @@
 <?php
 
-namespace polinaframework\core\db\validators;
-use polinaframework\core\tables\UserTable;
+namespace Polinaframework\Core\DB\Validators;
+use Polinaframework\Core\Tables\UserTable;
 
 class Type {
     public function validate($data, $field)
     {
         $map = UserTable::getMap();
-        if ($map[$field]['data_type'] !== gettype($data)) {
-            echo "Неверный тип поля <b>$field</b><br>";
+        if ($map[$field]['data_type'] !== gettype($data) && settype($data, $map[$field]['data_type'])) {
+            echo "РќРµРІРµСЂРЅС‹Р№ С‚РёРї РїРѕР»СЏ <b>$field</b><br>";
             return false;
         }
         return true;

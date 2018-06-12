@@ -1,7 +1,7 @@
 <?php
 
-namespace polinaframework\core\db;
-use polinaframework\core\Application;
+namespace Polinaframework\Core\DB;
+use Polinaframework\Core\Application;
 
 final class DB {
     private $tables = array();

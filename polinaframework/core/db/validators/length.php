@@ -1,15 +1,12 @@
 <?php
 
-namespace polinaframework\core\db\validators;
+namespace Polinaframework\core\DB\Validators;
 
 class Length {
     public function validate($data, $field, $min, $max)
     {
-        if (strlen($data) < $min) {
-            echo "Значение поля <b>$field</b> слишком короткое<br>";
-            return false;
-        } elseif (strlen($data) > $max) {
-            echo "Значение поля <b>$field</b> слишком длинное<br>";
+        if (strlen($data) < $min && strlen($data) > $max) {
+            echo "РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РїРѕР»СЏ <b>$field</b> РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РѕС‚ $min РґРѕ $max<br>";
             return false;
         }
         return true;

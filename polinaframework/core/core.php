@@ -8,6 +8,8 @@ class Application {
     private $corePath = "";
     private static $instance = null;
     private $__components = array();
+    private $pager = null;
+    private $isBuffer = false;
 
     private function __clone() {
 
@@ -20,6 +22,11 @@ class Application {
             $this->template = '.default';
         }
         $this->templatePath = "/polinaframework/templates/" . $this->template;
+        $this->pager = Pager::getInstance();
+    }
+
+    public function getPager() {
+        return $this->pager;
     }
 
     public static function getInstance() {
@@ -54,12 +61,46 @@ class Application {
         return $config;
     }
 
+    public function restartBuffer() {
+        if ($this->isBuffer) {
+            ob_clean();
+        }
+    }
+
+    private function startBuffer() {
+        ob_start();
+        $this->isBuffer = true;
+    }
+
+    private function endBuffer() {
+        if ($this->isBuffer) {
+            ob_end_clean();
+            $this->isBuffer = false;
+        }
+    }
+
+    private function outputContent() {
+        //получить все строки для замены
+        //получить контент, заменить все макросы на строки
+        //вывод контента
+        //закончить работу с буфером
+        $replace = Pager::getInstance()->getReplaceArray();
+        $content = ob_get_contents();
+        foreach ($replace as $macros => $value) {
+            $content = str_replace($macros, $value, $content);
+        }
+        $this->endBuffer();
+        echo $content;
+    }
+
     public function includeHeader() {
+        $this->startBuffer();
         $this->includeFile($this->getTemplatePath() . "/header.php");
     }
 
     public function includeFooter() {
         $this->includeFile($this->getTemplatePath() . "/footer.php");
+        $this->outputContent();
     }
 
     function includeComponent($name, $template = "", $params = array()) {

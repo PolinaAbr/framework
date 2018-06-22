@@ -9,14 +9,17 @@ class Pager {
     private $strings = array();
     private $properties = array();
     private $macrosKeys = array("css" => "CSS", "js" => "SCRIPTS", "str" => "STRINGS", "prop" => "PROPERTY_");
-
+    private $arrRequestUri = array();
+    private $isMain  = false;
 
     private function __clone() {
 
     }
 
     private function __construct() {
-
+        $uri = $this->getUri();
+        $this->isMain = $uri == "/" || $uri == "/index.php";
+        $this->arrRequestUri = explode("/", $uri);
     }
 
     public static function getInstance() {
@@ -63,7 +66,10 @@ class Pager {
         echo $this->getMacros($this->macrosKeys["str"]);
     }
 
-    public function showProperties($id) {
+    public function showProperty($id) {
+        if (!$this->getProperty($id)) {
+            $this->setProperty($id, "");
+        }
         echo $this->getMacros($this->macrosKeys["prop"] . $id);
     }
 
@@ -71,24 +77,12 @@ class Pager {
         return "#PF_CORE_" . $param . "#";
     }
 
-    public function showHead() {
-        //вызывает 3 метода showCss, showScripts, showHeadStrings
-        $this->showCss();
-        $this->showScripts();
-        $this->showHeadStrings();
-    }
 
     public function getReplaceArray() {
         $replace = array();
-        if ($scripts = $this->getReplace("scripts")) {
-            $replace[$this->getMacros($this->macrosKeys["js"])] = $scripts;
-        }
-        if ($styles = $this->getReplace("styles")) {
-            $replace[$this->getMacros($this->macrosKeys["css"])] = $styles;
-        }
-        if ($str = $this->getReplace("strings")) {
-            $replace[$this->getMacros($this->macrosKeys["str"])] = $str;
-        }
+        $replace[$this->getMacros($this->macrosKeys["js"])] = $this->getReplace("scripts");
+        $replace[$this->getMacros($this->macrosKeys["css"])] = $this->getReplace("styles");
+        $replace[$this->getMacros($this->macrosKeys["str"])] = $this->getReplace("strings");
         if ($prop = $this->getReplaceProperties()) {
             $replace = array_merge($replace, $prop);
         }
@@ -102,7 +96,7 @@ class Pager {
             return $return;
         }
         if (count($this->$param) > 0) {
-            $return = implode("/n", $this->$param);
+            $return = implode("\n", $this->$param);
         }
         return $return;
     }
@@ -113,5 +107,24 @@ class Pager {
            $prop[$this->getMacros($this->macrosKeys["prop"] . $id)] = $value;
         }
         return $prop;
+    }
+
+    public function isPage($page) {
+        switch ($page) {
+            case "main":
+                return $this->isMain;
+            case "404":
+                return defined(ERROR_PAGE_404) && ERROR_PAGE_404;
+            default:
+                return in_array($page, $this->arrRequestUri);
+        }
+    }
+
+    private function getUri() {
+        $pos = strpos($_SERVER["REQUEST_URI"], "?");
+        if ($pos === false) {
+            $pos = strlen($_SERVER["REQUEST_URI"]);
+        }
+        return substr($_SERVER["REQUEST_URI"], 0, $pos);
     }
 }

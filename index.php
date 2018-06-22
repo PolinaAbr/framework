@@ -1,18 +1,11 @@
 <?php
 include ($_SERVER['DOCUMENT_ROOT'] . "/polinaframework/header.php");
+$app = \Polinaframework\Core\Application::getInstance();
+$app->setProperty("title", "База знаний на PolinaFramework");
+$app->setProperty("wrapper-class", "main-wrapper");
 ?>
 
-<div class="main">
-    <div class="container-fluid">
-        <div class="workarea">
-            <div class="right-content">
-                <div class="breadcrumbs">
-                    <a href="#">Разработка</a> >
-                    <a href="#">Готовые рашения</a> >
-                    <a href="#">Подпункт1</a> >
-                    <span>Заголовок</span>
-                </div>
-                <h1>Заголовок</h1>
+
                 <p> З трэцим глытком
                     Разлилось цяпло
                     Цяпер пад сьнег
@@ -97,12 +90,7 @@ include ($_SERVER['DOCUMENT_ROOT'] . "/polinaframework/header.php");
                 <pre><code class="html">&lt;div&gt;123&lt;/div&gt;</code></pre>
                 <a href="#">Ссылка</a>
                 <a href="polinaframework/templates/.default/img/41053221.jpg" download="filename">Скачать</a>
-            </div>
-        </div>
-    </div>
-</div>
 
 <?
 include ($_SERVER['DOCUMENT_ROOT'] . "/polinaframework/footer.php");
 ?>
-

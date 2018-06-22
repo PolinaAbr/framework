@@ -61,15 +61,15 @@ class Application {
         return $config;
     }
 
+    private function startBuffer() {
+        ob_start();
+        $this->isBuffer = true;
+    }
+
     public function restartBuffer() {
         if ($this->isBuffer) {
             ob_clean();
         }
-    }
-
-    private function startBuffer() {
-        ob_start();
-        $this->isBuffer = true;
     }
 
     private function endBuffer() {
@@ -92,6 +92,43 @@ class Application {
         $this->endBuffer();
         echo $content;
     }
+
+    public function showProperty($id) {
+        $this->pager->showProperty($id);
+    }
+
+
+    public function setProperty($id, $prop) {
+        //устанавливает в массиве prop значение по id
+        $this->pager->setProperty($id, $prop);
+    }
+
+    public function getProperty($id) {
+        return $this->pager->getProperty($id);
+    }
+
+    public function addScript($src) {
+        //добавляет в массив scripts
+        //приидет путь
+        //с тегами
+        $this->pager->addScript($src);
+    }
+
+    public function addCss($link) {
+        $this->pager->addCss($link);
+    }
+
+    public function addHeadString($str) {
+        $this->pager->addHeadString($str);
+    }
+
+    public function showHead() {
+        //вызывает 3 метода showCss, showScripts, showHeadStrings
+        $this->pager->showCss();
+        $this->pager->showScripts();
+        $this->pager->showHeadStrings();
+    }
+
 
     public function includeHeader() {
         $this->startBuffer();
@@ -123,5 +160,17 @@ class Application {
         //подключение компонентов из массива
         //вызов метода execute того компонента, который мы указали
         //если подключили компонент, помещаем его в массив __components и при следующем обращении проверяем, есть ли в массиве и берем из массива имя
+    }
+
+    public function isPage($page) {
+        return $this->pager->isPage($page);
+    }
+
+    public function isMain() {
+         return $this->pager->isPage("main");
+    }
+
+    public function is404() {
+        return $this->pager->isPage("404");
     }
 }

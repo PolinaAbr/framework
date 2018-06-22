@@ -1,27 +1,33 @@
 <?php
+use Polinaframework\Core\Pager;
 if (!defined('PF_CORE_INCLUDE') || PF_CORE_INCLUDE !== true) die();
-$path = Polinaframework\Core\Application::getInstance()->getTemplatePath(false);
+$app = \Polinaframework\Core\Application::getInstance();
+$path = $app->getTemplatePath(false);
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <? $app->setProperty("title", "База знаний");?>
+    <title><? $app->showProperty("title")?></title>
     <link rel="shortcut icon" href=<? echo $path . "/img/favicon.ico"?> type="image/x-icon">
     <meta name="format-detection" content="telephone=no"><!-- отключение преобразования телефонов в ссылке на IOS -->
     <meta http-equiv="x-rim-auto-match" content="none"><!-- отключение преобразования телефонов в ссылке на BlackBerry -->
-    <link href=<? echo $path . "/css/bootstrap.min.css"?> rel="stylesheet" media="screen">
-    <link href=<? echo $path . "/libs/fancybox/jquery.fancybox.min.css"?> rel="stylesheet" type="text/css">
-    <link href=<? echo $path . "/libs/highlightjs/darkula.css"?> rel="stylesheet" type="text/css">
-    <link href=<? echo $path . "/css/style.css"?> rel="stylesheet" type="text/css">
-    <script src=<? echo $path . "/libs/jquery-3.3.1.min.js"?>></script>
-    <script src=<? echo $path . "/libs/fancybox/jquery.fancybox.min.js"?>></script>
-    <script src=<? echo $path . "/js/main.js"?>></script>
+    <? $app->showHead();
+    $app->addHeadString('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
+    $app->addCss($path . "/css/bootstrap.min.css");
+    $app->addCss($path . "/libs/fancybox/jquery.fancybox.min.css");
+    $app->addCss($path . "/libs/highlightjs/darkula.css");
+    $app->addCss($path . "/css/style.css");
+    $app->addScript($path . "/libs/jquery-3.3.1.min.js");
+    $app->addScript($path . "/libs/fancybox/jquery.fancybox.min.js");
+    $app->addScript($path . "/js/main.js");
+    ?>
 </head>
 
 <body>
-    <div class="wrapper main-wrapper">
+    <div class="wrapper <? $app->showProperty("wrapper-class") ?>">
 
         <div class="header">
             <div class="container-fluid">
@@ -50,3 +56,76 @@ $path = Polinaframework\Core\Application::getInstance()->getTemplatePath(false);
                 </div>
             </div>
         </div>
+        <div class="main">
+            <div class="container-fluid">
+                <div class="workarea">
+                    <? if (!$app->isMain()) :  ?>
+                    <div class="left-content">
+                        <div class="main__menu">
+                            <div class="menu__item">
+                                <div class="menu__item-wrap">
+                                    <a class="item__link" href="#">Готовые решения</a>
+                                    <a class="submenu__btn" href="#"></a>
+                                </div>
+                                <div class="submenu">
+                                    <div class="submenu__item">
+                                        <a href="#">
+                                            Подпункт1
+                                        </a>
+                                    </div>
+                                    <div class="submenu__item">
+                                        <a href="#">
+                                            Подпункт2
+                                        </a>
+                                    </div>
+                                    <div class="submenu__item">
+                                        <a href="#">
+                                            Подпункт3
+                                        </a>
+                                    </div>
+                                    <div class="submenu__item">
+                                        <a href="#">
+                                            Подпункт4
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="menu__item">
+                                <div class="menu__item-wrap">
+                                    <a class="item__link" href="#">Полезные советы</a>
+                                </div>
+                            </div>
+                            <div class="menu__item">
+                                <div class="menu__item-wrap">
+                                    <a class="item__link" href="#">Особенности/баги</a>
+                                </div>
+                            </div>
+                            <div class="menu__item">
+                                <div class="menu__item-wrap">
+                                    <a class="item__link" href="#">Сататьи</a>
+                                </div>
+                            </div>
+                            <div class="menu__item">
+                                <div class="menu__item-wrap">
+                                    <a class="item__link" href="#">Для новичков</a>
+                                </div>
+                            </div>
+                            <div class="menu__item">
+                                <div class="menu__item-wrap">
+                                    <a class="item__link" href="#">Помойка</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tags-cloud">
+                            Облако тегов
+                        </div>
+                    </div>
+                    <? endif ?>
+                    <div class="right-content">
+                        <div class="breadcrumbs">
+                            <a href="#">Разработка</a> >
+                            <a href="#">Готовые рашения</a> >
+                            <a href="#">Подпункт1</a> >
+                            <span>Заголовок</span>
+                        </div>
+                        <h1>Заголовок</h1>

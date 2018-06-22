@@ -6,27 +6,26 @@ use Polinaframework\Core\DB\Validators\Length;
 use Polinaframework\Core\DB\Validators\Type;
 use Polinaframework\Core\DB\Validators\Unique;
 
-class UserTable extends Table {
-
+class BlogTable
+{
     public static function getTableName() {
-        return "PF_USER";
+        return "pf_blog";
     }
 
     public static function getMap() {
         return array (
-            'user_id' =>
+            'id' =>
                 array (
                     'data_type' => 'integer',
                     'primary' => true,
                     'required' => true,
                     'autocomplete' => true,
                 ),
-            'username' =>
+            'date_insert' =>
                 array (
-                    'data_type' => 'string',
-                    'unique' => true,
+                    'data_type' => 'date',
                     'required' => true,
-                    'validate' => 'validateUsername',
+                    'validate' => 'validateDate',
                 ),
             'password' =>
                 array (

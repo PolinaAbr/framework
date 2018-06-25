@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 spl_autoload_register(function ($class) {
     $file = $_SERVER['DOCUMENT_ROOT'] . '/' . $class . '.php';
     if (is_file($file)) {

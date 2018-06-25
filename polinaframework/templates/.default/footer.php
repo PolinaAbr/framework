@@ -1,7 +1,7 @@
 <?php
 if (!defined('PF_CORE_INCLUDE') || PF_CORE_INCLUDE !== true) die();
-$path = Polinaframework\Core\Application::getInstance()->getTemplatePath(false);
 $app = \Polinaframework\Core\Application::getInstance();
+$path = $app->getTemplatePath(false);
 $app->setProperty("title", "База знаний");
 ?>
 </div>

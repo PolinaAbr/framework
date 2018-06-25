@@ -17,7 +17,7 @@ class Application {
 
     private function __construct() {
         $this->corePath = $_SERVER['DOCUMENT_ROOT'] . "/polinaframework";
-        $this->template = $this->getConfig('site')['template'];
+        $this->template = $this->getConfig('site')['templates'];
         if ($this->template == '') {
             $this->template = '.default';
         }

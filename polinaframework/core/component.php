@@ -21,7 +21,7 @@ abstract class Component {
         $this->templatePath = "/components/".$this->name."/templates/".$this->template;
     }
 
-    public function includeTemplate() {
+    public function includeTemplate($page = "templates") {
         $params = $this->params;
         $result = $this->result;
         $templatePath = Application::getInstance()->getCorePath() . $this->templatePath;
@@ -29,8 +29,8 @@ abstract class Component {
         if (file_exists($templatePath . "/result_modifier.php")) {
             include($templatePath . "/result_modifier.php");
         }
-        if (file_exists($templatePath . "/template.php")) {
-            include($templatePath . "/template.php");
+        if (file_exists($templatePath . "/" . $page . ".php")) {
+            include($templatePath . "/" . $page . ".php");
         }
     }
 

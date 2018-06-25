@@ -48,7 +48,7 @@ final class DB {
 
     private function getConfig() {
         $params = Application::getInstance()->getConfig('db');
-        return array('host' => $params['host'], 'user' => $params['root'], 'password' => $params['password'], 'db' => $params['pf_db']);
+        return array('host' => $params['host'], 'user' => $params['user'], 'password' => $params['password'], 'db' => $params['db']);
     }
 
     public function query($query) {

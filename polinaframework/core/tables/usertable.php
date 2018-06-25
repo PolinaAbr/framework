@@ -39,12 +39,12 @@ class UserTable extends Table {
 
     public static function validateUsername($value) {
         $type = new Type();
-        $unique = new Unique;
-        $length = new Length;
+        $unique = new Unique();
+        $length = new Length();
         $result = array(
             $type->validate($value, 'username'),
             $unique->validate($value, 'username', self::getTableName()),
-            $length->validate($value, 'password', 5, 20)
+            $length->validate($value, 'username', 5, 20)
         );
         foreach ($result as $item) {
             if ($item === false) {
@@ -57,7 +57,7 @@ class UserTable extends Table {
     public static function validatePassword($value)
     {
         $type = new Type();
-        $length = new Length;
+        $length = new Length();
         $result = array(
             $type->validate($value, 'password'),
             $length->validate($value, 'password', 5, 30)

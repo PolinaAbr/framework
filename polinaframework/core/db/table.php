@@ -82,7 +82,7 @@ abstract class Table
     }
 
     public static function getList($data) {
-        $query = "select * from " . static::getTableName();
+//        $query = "select * from " . static::getTableName();
         foreach ($data as $key => $item) {
             switch ($key) {
                 case 'select':

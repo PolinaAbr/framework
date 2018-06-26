@@ -21,7 +21,7 @@ abstract class Component {
         $this->templatePath = "/components/".$this->name."/templates/".$this->template;
     }
 
-    public function includeTemplate($page = "templates") {
+    public function includeTemplate($page = "template") {
         $params = $this->params;
         $result = $this->result;
         $templatePath = Application::getInstance()->getCorePath() . $this->templatePath;
@@ -33,5 +33,4 @@ abstract class Component {
             include($templatePath . "/" . $page . ".php");
         }
     }
-
 }

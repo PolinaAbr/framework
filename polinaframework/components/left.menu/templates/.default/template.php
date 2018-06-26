@@ -33,7 +33,7 @@ if (!defined('PF_CORE_INCLUDE') || PF_CORE_INCLUDE !== true) die();
         </div>
         <div class="menu__item">
             <div class="menu__item-wrap">
-                <a class="item__link" href="#">Полезные советы</a>
+                <a class="item__link" href="http://framework/development/detail/">Полезные советы</a>
                 <a class="submenu__btn" href="#"></a>
             </div>
             <div class="submenu">

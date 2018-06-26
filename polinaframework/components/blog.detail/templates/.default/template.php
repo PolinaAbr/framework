@@ -1,6 +1,8 @@
 <?php
 if (!defined('PF_CORE_INCLUDE') || PF_CORE_INCLUDE !== true) die();
+echo $result[0]["DETAIL_TEXT"];
 ?>
+
 
 <pre><code class="php">function my_php_demo_snippet(){
   var $test = 'Hello!';

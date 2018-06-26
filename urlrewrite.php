@@ -10,14 +10,14 @@ $arUrlRewrite=array (
         ),
     1 =>
         array (
-            'CONDITION' => '#^/markup/#',
+            'CONDITION' => '#^/front/#',
             'RULE' => '',
-            'PATH' => '/markup/index.php',
+            'PATH' => '/front/index.php',
         ),
     2 =>
         array (
             'CONDITION' => '#^/management/#',
             'RULE' => '',
-            'PATH' => '/manage/index.php',
+            'PATH' => '/management/index.php',
         ),
 );

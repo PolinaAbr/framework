@@ -1,15 +1,29 @@
 <?php
 if (!defined('PF_CORE_INCLUDE') || PF_CORE_INCLUDE !== true) die();
+for ($i = 0; $i < count($result); $i++) {
 ?>
 
 <div class="list__item">
     <div class="item__head">
-        <a href="#">Название элемента</a>
+        <a href="#"><? echo $result[$i]["NAME"] ?></a>
     </div>
     <div class="item__text">
-        З трэцим глытком Разлилось цяпло Цяпер пад сьнег Народу битком Паглядзець прышло На мой каралеуски нижни брэйк Кагда я пьяны я культавы А культавы я всегда И твой касяк недакурэны Астанецца навсегда (2 раза) Сёння я здольны Выйсьци у космас без Без ракеты Сення я вольны А у астатни час Хаваюся у цал пакеты Кагда я пьяны я культавы А культавы я всегда И твой касяк недакурэны Астанецца на всегда (2 раза)
+        <? echo $result[$i]["PREVIEW_TEXT"] ?>
     </div>
     <div class="item__tags">
-        <span>Теги:</span> <a href="#">тег1</a>, <a href="#">тег2</a>, <a href="#">тег3</a>, <a href="#">тег4</a>
+        <span>Теги:</span>
+        <?
+        $tags = explode(", ", $result[$i]["TAGS"]);
+        for ($j = 0; $j < count($tags) - 1; $j++) {
+        ?>
+            <a href="#"><? echo $tags[$j] ?></a>,
+        <?
+        }
+        ?>
+        <a href="#"><? echo $tags[count($tags) - 1] ?></a>
     </div>
 </div>
+
+<?
+}
+?>

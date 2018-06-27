@@ -10,7 +10,10 @@ class BlogList extends Component{
         $items = ElementsTable::getList(
             array(
                 "select" => array("*"),
-                "filter" => array("BLOG_ID" => $this->params["blog_id"], "ACTIVE" => "Y"),
+                "filter" => array(
+                    "BLOG_ID" => $this->params["blog_id"],
+                    "SECTION_ID" => $this->params["section_id"],
+                    "ACTIVE" => "Y"),
                 "order" => array($this->params["sort_order"] => $this->params["sort_by"])
             )
         );

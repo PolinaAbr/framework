@@ -9,13 +9,32 @@ use Polinaframework\Core\Tables\Blog\SectionTable;
 
 class Blog extends Component {
     private $sectionId = null;
+    private $section = null;
+    private $element = null;
 
     public function execute()
     {
-        $isElement = true;
-        $isSection = false;
         $this->prepareParams();
+        $sectionRules = explode("#", $this->params["rules"]["section"]);
+        switch ($sectionRules[count($sectionRules) - 2]) {
+            case "SECTION_CODE":
+                $this->section = "CODE";
+                break;
+            case "SECTION_ID":
+                $this->section = "ID";
+        }
+        $detailRules = explode("#", $this->params["rules"]["detail"]);
+        switch ($detailRules[count($detailRules) - 2]) {
+            case "ELEMENT_CODE":
+                $this->element = "CODE";
+                break;
+            case "ELEMENT_ID":
+                $this->element = "ID";
+        }
+        $uri404 = "http://" . $_SERVER["SERVER_NAME"] . "/404.php";
         $requestUri = $_SERVER["REQUEST_URI"];
+        $isUriRight = false;
+        $isElement = false;
         //отделяем get-параметры от url
         if ($pos = strpos($requestUri, "?")) {
             $requestParams = substr($requestUri, $pos);
@@ -25,43 +44,52 @@ class Blog extends Component {
         if (count($requestUri) == 1) {
             $this->includeTemplate("section");
         } else {
-            while (count($requestUri) > 1) {
-                $last = array_pop($requestUri);
-                if (!$this->checkElement($last)) {
-                    $elem = false;
-                    if (!$this->checkSection($last)) {
-                        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/404.php")) {
-//                            include_once($_SERVER["DOCUMENT_ROOT"] . "/404.php");
-                        }
-                        echo 5;
-//                        $uri = $_SERVER["SERVER_NAME"];
-//                        header("Location: https://framework/404.php");
-                        break;
-                    }
-                } else {
-                    $last = array_pop($requestUri);
-                    var_dump($this->sectionId);
-                    if ($this->sectionId !== 0 && !$this->checkSection($last)) {
-                        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/404.php")) {
-//                            include_once($_SERVER["DOCUMENT_ROOT"] . "/404.php");
-                        }
-                        echo 5;
-//                        $uri = $_SERVER["SERVER_NAME"];
-//                        header("Location: https://framework/404.php");
-                        break;
-                    } else {
-                        echo 6;
-                    }
+            $last = array_pop($requestUri);
+            if ($this->checkElement($last)) {
+                if (count($requestUri) == 1) {
+                    header("Location: " . $uri404);
                 }
+                $last = array_pop($requestUri);
+                $isElement = true;
+            }
+            while (count($requestUri) > 0) {
+                $section = $this->checkSection($last);
+                if (!$section || (count($requestUri) == 1 && $this->sectionId != 0)) {
+//                    $isUriRight = false;
+//                    break;
+//                    if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/404.php")) {
+//                        include_once($_SERVER["DOCUMENT_ROOT"] . "/404.php");
+//                    }
+                    header("Location: " . $uri404);
+                } else {
+                    $isUriRight = true;
+                }
+                $last = array_pop($requestUri);
             }
         }
-        //проверять с конца
+        if ($isElement && $isUriRight) {
+            $this->includeTemplate("detail");
+        } elseif ($isUriRight) {
+            $this->includeTemplate("section");
+        }
     }
 
     private function prepareParams() {
         if (!$this->params["blog_id"] || $this->params["blog_id"] == 0) {
-            die("Не указан идентификатор раздела");
-            //раскладывать url
+            $requestUri = $_SERVER["REQUEST_URI"];
+            if ($pos = strpos($requestUri, "?")) {
+                $requestUri = substr($requestUri, 0, $pos);
+            }
+            $requestUri = $this->explodeUri($requestUri);
+            $result = BlogTable::getList(
+                array(
+                    "select" => array("ID"),
+                    "filter" => array("CODE" => $requestUri[0])
+                )
+            );
+            if ($result->getCount() == 1) {
+                $this->params["blog_id"] = $result->fetch()["ID"];
+            }
         }
         if (!$this->params["sort_order"]) {
             $this->params["sort_order"] = "DATE_INSERT";
@@ -70,7 +98,11 @@ class Blog extends Component {
             $this->params["sort_by"] = "desc";
         }
         if (!$this->params["rules"] || $this->params["rules"] == "") {
-            die("Не указаны правиля для формирования адреса");
+            $this->params["rules"] = array(
+                "sections" => "",
+                "section" => "/dev/#SECTION_CODE#/",
+                "detail" => "/dev/#SECTION_CODE_PATH#/#ELEMENT_CODE#/"
+            );
         }
     }
 
@@ -88,35 +120,43 @@ class Blog extends Component {
 
     private function checkSection($section) {
         if ($this->sectionId !== null) {
-            $result = SectionTable::getList(
+            $items = SectionTable::getList(
                 array(
                     "select" => array("CODE", "SECTION_ID", "BLOG_ID"),
                     "filter" => array("CODE" => $section, "ID" => $this->sectionId)
                 )
             );
         } else {
-            $result = SectionTable::getList(
+            $items = SectionTable::getList(
                 array(
-                    "select" => array("CODE", "SECTION_ID", "BLOG_ID"),
-                    "filter" => array("CODE" => $section)
+                    "select" => array("ID", "CODE", "SECTION_ID", "BLOG_ID"),
+                    "filter" => array($this->section => $section)
                 )
             );
         }
-        if ($result->getCount() == 1) {
-            $this->sectionId = $result->fetch()["SECTION_ID"];
+        if ($items->getCount() == 1) {
+            $item = $items->fetch();
+            $this->sectionId = $item["SECTION_ID"];
+            $this->result["section_code"] = $item["CODE"];
+            if ($item["ID"]) {
+                $this->result["section_id"] = $item["ID"];
+            }
             return true;
         }
         return false;    }
 
     private function checkElement($element) {
-        $result = ElementsTable::getList(
+        $items = ElementsTable::getList(
             array(
-                "select" => array("CODE", "SECTION_ID"),
-                "filter" => array("CODE" => $element)
+                "select" => array("ID", "CODE", "SECTION_ID"),
+                "filter" => array($this->element => $element)
             )
         );
-        if ($result->getCount() == 1) {
-            $this->sectionId = $result->fetch()["SECTION_ID"];
+        if ($items->getCount() == 1) {
+            $item = $items->fetch();
+            $this->sectionId = $item["SECTION_ID"];
+            $this->result["element_code"] = $item["CODE"];
+            $this->result["element_id"] = $item["ID"];
             return true;
         }
         return false;

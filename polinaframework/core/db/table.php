@@ -136,7 +136,7 @@ abstract class Table
                     break;
             }
         }
-        debug($query);
+//        debug($query);
         $result = DB::getInstance()->query($query);
         return $result;
     }

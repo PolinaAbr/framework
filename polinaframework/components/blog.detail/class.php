@@ -8,8 +8,6 @@ class BlogDetail extends Component{
 
     public function execute()
     {
-        //TODO: убрать присвоение
-        $this->params["element_id"] = 3;
         $items = ElementsTable::getList(
             array(
                 "select" => array("*"),

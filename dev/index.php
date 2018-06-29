@@ -8,11 +8,6 @@ $app->setProperty("wrapper-class", "section-wrapper");
 <div class="list">
 
     <?
-    //параметры
-    //id блога
-    //sort
-    //filtername
-    //rule массив
     $app->includeComponent("blog", "",
         array(
             "blog_id" => 1,

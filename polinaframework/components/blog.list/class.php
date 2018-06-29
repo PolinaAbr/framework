@@ -9,21 +9,26 @@ class BlogList extends Component{
 
     public function execute() {
         $sections = array();
-        if ($this->params["section_id"]) {
-            $items = SectionTable::getList(
-                array(
-                    "select" => array("ID"),
-                    "filter" => array(
-                        "SECTION_ID" => $this->params["section_id"],
-                        "ACTIVE" => "Y")
-                )
-            );
-            if ($items->getCount() > 0) {
-                while ($item = $items->fetch()) {
-                    $sections[] = $item["ID"];
+        $this->params["section_id"] = 3;
+        if ($sectionsList = $this->params["section_id"]) {
+            do {
+                $items = SectionTable::getList(
+                    array(
+                        "select" => array("ID"),
+                        "filter" => array(
+                            "SECTION_ID" => $sectionsList,
+                            "ACTIVE" => "Y")
+                    )
+                );
+                if ($count = $items->getCount() > 0) {
+                    while ($item = $items->fetch()) {
+                        $sections[] = $item["ID"];
+                    }
+                    $sectionsList = implode(", ", $sections);
+                    $this->params["section_id"] .= ", " . implode(", ", $sections);
+                    unset($sections);
                 }
-                $this->params["section_id"] = implode(", ", $sections);
-            }
+            } while ($count > 0);
             $items = ElementsTable::getList(
                 array(
                     "select" => array("*"),

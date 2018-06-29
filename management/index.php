@@ -6,7 +6,24 @@ $app->setProperty("wrapper-class", "section-wrapper");
 ?>
 
     <div class="list">
-<!--        --><?// $app->includeComponent("blog.list"); ?>
+
+        <?
+        $app->includeComponent("blog", "",
+            array(
+                "blog_id" => 3,
+                "sort_order" => "DATE_INSERT",
+                "sort_by" => "desc",
+                "filtername" => "arrfilter",
+                "rules" =>
+                    array(
+                        "sections" => "",
+                        "section" => "/dev/#SECTION_CODE#/",
+                        "detail" => "/dev/#SECTION_CODE_PATH#/#ELEMENT_CODE#/"
+                    )
+            )
+        );
+        ?>
+
     </div>
 
 <?

@@ -173,4 +173,9 @@ class Application {
     public function is404() {
         return $this->pager->isPage("404");
     }
+
+    public function set404() {
+        if ($this->is404()) return;
+        echo "Error";
+    }
 }

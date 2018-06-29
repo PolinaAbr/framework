@@ -12,7 +12,7 @@ class BlogDetail extends Component{
             array(
                 "select" => array("*"),
                 "filter" => array(
-                    "ID" => $this->params["element_id"],
+                    "CODE" => $this->params["element_code"],
                     "ACTIVE" => "Y"
                 )
             )

@@ -33,4 +33,26 @@ abstract class Component {
             include($templatePath . "/" . $page . ".php");
         }
     }
+
+    public function explodeUri($returnParams = false) {
+        $requestParams = "";
+        $requestUri = $_SERVER["REQUEST_URI"];
+        //отделяем get-параметры от url
+        if ($pos = strpos($requestUri, "?")) {
+            $requestParams = substr($requestUri, $pos);
+            $requestUri = substr($requestUri, 0, $pos);
+        }
+        if ($returnParams) {
+            return $requestParams;
+        }
+        //удаляем первый и последний слеши
+        if ($requestUri[0] == "/") {
+            $requestUri = substr($requestUri, 1);
+        }
+        if ($requestUri[strlen($requestUri) - 1] == "/") {
+            $requestUri = substr($requestUri, 0, strlen($requestUri) - 1);
+        }
+        return explode("/", $requestUri);
+    }
+
 }

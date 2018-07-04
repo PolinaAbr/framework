@@ -8,5 +8,6 @@ Application::getInstance()->includeComponent("blog.detail", "",
         "blog_id" => $params["blog_id"],
         "sort_order" => $params["sort_order"],
         "sort_by" => $params["sort_by"],
-        "element_code" => $result["element_code"]
+        "element_code" => $result["element_code"],
+        "section_id" => $result["section_id"]
     ));

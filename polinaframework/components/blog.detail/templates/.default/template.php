@@ -1,6 +1,6 @@
 <?php
 if (!defined('PF_CORE_INCLUDE') || PF_CORE_INCLUDE !== true) die();
-echo $result[0]["DETAIL_TEXT"];
+echo $result["DETAIL_TEXT"];
 ?>
 
 

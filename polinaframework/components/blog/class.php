@@ -7,13 +7,15 @@ use Polinaframework\Core\Tables\Blog\BlogTable;
 use Polinaframework\Core\Tables\Blog\ElementsTable;
 use Polinaframework\Core\Tables\Blog\SectionTable;
 
-class Blog extends Component {
+class Blog extends Component
+{
 //    private $sectionId = null;
 //    private $section = null;
 //    private $element = null;
     private $field;
 
-    private function prepareParams() {
+    private function prepareParams()
+    {
         if (!$this->params["blog_id"] || $this->params["blog_id"] == 0) {
             $requestUri = $_SERVER["REQUEST_URI"];
             if ($pos = strpos($requestUri, "?")) {
@@ -45,8 +47,8 @@ class Blog extends Component {
         }
     }
 
-    public function execute()
-    {
+//    public function execute()
+//    {
 //        $this->prepareParams();
 //        $sectionRules = explode("#", $this->params["rules"]["section"]);
 //        switch ($sectionRules[count($sectionRules) - 2]) {
@@ -103,13 +105,14 @@ class Blog extends Component {
 //            $template = array_search("/dev/#SECTION_" . $this->section . "#/", $this->params["rules"]);
 //        }
 //        $this->includeTemplate($template);
+//    }
 
-
+    public function execute()
+    {
         $template = "";
         $templateSection = "";
         $templateElement = "";
         $this->prepareParams();
-        $requestUri = $_SERVER["REQUEST_URI"];
         $detailRules = explode("#", $this->params["rules"]["detail"]);
         switch ($detailRules[count($detailRules) - 2]) {
             case "ELEMENT_CODE":
@@ -118,12 +121,7 @@ class Blog extends Component {
             case "ELEMENT_ID":
                 $this->field = "ID";
         }
-        //отделяем get-параметры от url
-        if ($pos = strpos($requestUri, "?")) {
-            $requestParams = substr($requestUri, $pos);
-            $requestUri = substr($requestUri, 0, $pos);
-        }
-        $requestUri = $this->explodeUri($requestUri);
+        $requestUri = $this->explodeUri();
         foreach ($this->params["rules"] as $key => $rule) {
             if (preg_match("(^/\w+/#\w+#/$)", $rule)) {
                 $templateSection = $key;
@@ -135,13 +133,13 @@ class Blog extends Component {
         $last = array_pop($requestUri);
         $items = ElementsTable::getList(
             array(
-                "select" => array("ID", "CODE"),
+                "select" => array("ID", "CODE", "SECTION_ID"),
                 "filter" => array($this->field => $last)
             )
         );
-
         if ($items->getCount() == 1) {
             $this->result["element_code"] = $last;
+            $this->result["section_id"] = $items->fetch()["SECTION_ID"];
             $template = $templateElement;
         } else {
             $this->result["section_code"] = $last;
@@ -149,18 +147,6 @@ class Blog extends Component {
         $this->includeTemplate($template);
     }
 
-    public function explodeUri($uri) {
-        $requestUri = $uri;
-        //удаляем первый и последний слеши
-        if ($requestUri[0] == "/") {
-            $requestUri = substr($requestUri, 1);
-        }
-        if ($requestUri[strlen($requestUri) - 1] == "/") {
-            $requestUri = substr($requestUri, 0, strlen($requestUri) - 1);
-        }
-        return explode("/", $requestUri);
-
-    }
 
 //    private function checkSection($section) {
 //        if ($this->sectionId !== null) {

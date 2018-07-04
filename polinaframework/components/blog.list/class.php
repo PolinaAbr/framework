@@ -1,59 +1,136 @@
 <?php
 
 namespace Polinaframework\Components;
+use Polinaframework\Core\Application;
 use Polinaframework\Core\Component;
+use Polinaframework\Core\Tables\Blog\BlogTable;
 use Polinaframework\Core\Tables\Blog\ElementsTable;
 use Polinaframework\Core\Tables\Blog\SectionTable;
 
 class BlogList extends Component{
+    private $sectionId = null;
 
     public function execute() {
-        $sections = array();
-        $this->params["section_id"] = 3;
-        if ($sectionsList = $this->params["section_id"]) {
-            do {
-                $items = SectionTable::getList(
+        $requestUri = $this->explodeUri();
+        $isUriRight = false;
+        $items = SectionTable::getList(
+            array(
+                "select" => array("ID", "SECTION_ID"),
+                "filter" => array(
+                    "CODE" => $this->params["section_code"],
+                    "ACTIVE" => "Y")
+            )
+        );
+        if ($items->getCount() == 1) {
+            $item = $items->fetch();
+            $this->sectionId = $item["SECTION_ID"];
+            $this->params["section_id"] = $item["ID"];
+            array_pop($requestUri);
+            $last = array_pop($requestUri);
+            if (count($requestUri) == 0 && $this->sectionId == 0) {
+                $isUriRight = true;
+            } elseif (count($requestUri) == 0 && $this->sectionId != 0) {
+                Application::getInstance()->set404();
+            }
+            while (count($requestUri) > 0) {
+                $section = $this->checkSection($last);
+                if (!$section || (count($requestUri) == 1 && $this->sectionId != 0)) {
+                    Application::getInstance()->set404();
+                } else {
+                    $isUriRight = true;
+                }
+                $last = array_pop($requestUri);
+            }
+            if ($isUriRight) {
+                $sections = array();
+                if ($sectionsList = $this->params["section_id"]) {
+                    do {
+                        $items = SectionTable::getList(
+                            array(
+                                "select" => array("ID"),
+                                "filter" => array(
+                                    "SECTION_ID" => $sectionsList,
+                                    "ACTIVE" => "Y")
+                            )
+                        );
+                        if ($count = $items->getCount() > 0) {
+                            while ($item = $items->fetch()) {
+                                $sections[] = $item["ID"];
+                            }
+                            $sectionsList = implode(", ", $sections);
+                            $this->params["section_id"] .= ", " . implode(", ", $sections);
+                            unset($sections);
+                        }
+                    } while ($count > 0);
+                    $items = ElementsTable::getList(
+                        array(
+                            "select" => array("*"),
+                            "filter" => array(
+                                "BLOG_ID" => $this->params["blog_id"],
+                                "SECTION_ID" => $this->params["section_id"],
+                                "ACTIVE" => "Y"),
+                            "order" => array($this->params["sort_order"] => $this->params["sort_by"])
+                        )
+                    );
+                } else {
+                    $items = ElementsTable::getList(
+                        array(
+                            "select" => array("*"),
+                            "filter" => array(
+                                "BLOG_ID" => $this->params["blog_id"],
+                                "ACTIVE" => "Y"),
+                            "order" => array($this->params["sort_order"] => $this->params["sort_by"])
+                        )
+                    );
+                }
+                while($item = $items->fetch()) {
+                    $this->result[] = $item;
+                }
+                $this->includeTemplate();
+            }
+        } else {
+            $last = array_pop($requestUri);
+            $items = BlogTable::getList(
+                array(
+                    "select" => array("ID"),
+                    "filter" => array(
+                        "ID" => $this->params["blog_id"],
+                        "CODE" => $last,
+                        "ACTIVE" => "Y")
+                )
+            );
+            if ($items->getCount() == 1) {
+                $items = ElementsTable::getList(
                     array(
-                        "select" => array("ID"),
+                        "select" => array("*"),
                         "filter" => array(
-                            "SECTION_ID" => $sectionsList,
-                            "ACTIVE" => "Y")
+                            "BLOG_ID" => $this->params["blog_id"],
+                            "ACTIVE" => "Y"),
+                        "order" => array($this->params["sort_order"] => $this->params["sort_by"])
                     )
                 );
-                if ($count = $items->getCount() > 0) {
-                    while ($item = $items->fetch()) {
-                        $sections[] = $item["ID"];
-                    }
-                    $sectionsList = implode(", ", $sections);
-                    $this->params["section_id"] .= ", " . implode(", ", $sections);
-                    unset($sections);
+                while($item = $items->fetch()) {
+                    $this->result[] = $item;
                 }
-            } while ($count > 0);
-            $items = ElementsTable::getList(
-                array(
-                    "select" => array("*"),
-                    "filter" => array(
-                        "BLOG_ID" => $this->params["blog_id"],
-                        "SECTION_ID" => $this->params["section_id"],
-                        "ACTIVE" => "Y"),
-                    "order" => array($this->params["sort_order"] => $this->params["sort_by"])
-                )
-            );
-        } else {
-            $items = ElementsTable::getList(
-                array(
-                    "select" => array("*"),
-                    "filter" => array(
-                        "BLOG_ID" => $this->params["blog_id"],
-                        "ACTIVE" => "Y"),
-                    "order" => array($this->params["sort_order"] => $this->params["sort_by"])
-                )
-            );
+                $this->includeTemplate();
+            } else {
+                Application::getInstance()->set404();
+            }
         }
-        while($item = $items->fetch()) {
-            $this->result[] = $item;
-        }
-        $this->includeTemplate();
     }
 
+    private function checkSection($section) {
+        $items = SectionTable::getList(
+            array(
+                "select" => array("CODE", "SECTION_ID", "BLOG_ID"),
+                "filter" => array("CODE" => $section, "ID" => $this->sectionId)
+            )
+        );
+        if ($items->getCount() == 1) {
+            $item = $items->fetch();
+            $this->sectionId = $item["SECTION_ID"];
+            return true;
+        }
+        return false;
+    }
 }

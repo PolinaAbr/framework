@@ -25,16 +25,17 @@ class Application {
         $this->pager = Pager::getInstance();
     }
 
-    public function getPager() {
-        return $this->pager;
-    }
-
     public static function getInstance() {
         if (is_null(self::$instance)) {
             self::$instance = new static();
         }
         return self::$instance;
     }
+
+    public function getPager() {
+        return $this->pager;
+    }
+
 
     public function includeFile($path) {
         if (file_exists($path)) {

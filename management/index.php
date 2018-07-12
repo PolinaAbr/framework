@@ -1,4 +1,7 @@
 <?php
+session_start();
+$_SESSION["blog_id"] = 3;
+$_SESSION["blog_code"] = "management";
 include ($_SERVER['DOCUMENT_ROOT'] . "/polinaframework/header.php");
 $app = \Polinaframework\Core\Application::getInstance();
 $app->setProperty("title", "База знаний на PolinaFramework");

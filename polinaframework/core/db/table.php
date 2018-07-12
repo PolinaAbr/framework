@@ -29,7 +29,6 @@ abstract class Table
                 $validation = false;
                 break;
             }
-
             if ($property['validate'] && !$validation = $class::$property['validate']($data[$field])) {
                 //$validation = $class::$property['validate']($data[$field]);
                 break;
@@ -41,7 +40,6 @@ abstract class Table
             } else {
                 $queryValues .= "'$data[$field]', ";
             }
-
         }
         if ($validation) {
             $queryFields = substr($queryFields, 0, strlen($queryFields) - 2);

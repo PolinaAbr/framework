@@ -1,4 +1,5 @@
 <?php
+session_start();
 include ($_SERVER['DOCUMENT_ROOT'] . "/polinaframework/header.php");
 $app = \Polinaframework\Core\Application::getInstance();
 $app->setProperty("title", "База знаний на PolinaFramework");

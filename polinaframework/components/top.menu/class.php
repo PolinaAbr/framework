@@ -9,7 +9,7 @@ class TopMenu extends Component {
     {
         $result = \Polinaframework\Core\Tables\Blog\BlogTable::getList(array("select" => array("ID", "CODE", "NAME")));
         while ($item = $result->fetch()) {
-            echo "<a class='menu__item' href='http://framework/" . $item['CODE'] . "/'>" . $item['NAME'] . "</a>";
+            echo "<a class='menu__item' href='http://" . $_SERVER["SERVER_NAME"] . "/" . $item['CODE'] . "/'>" . $item['NAME'] . "</a>";
         }
     }
 

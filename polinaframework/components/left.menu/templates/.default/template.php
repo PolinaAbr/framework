@@ -1,51 +1,45 @@
 <?php
 if (!defined('PF_CORE_INCLUDE') || PF_CORE_INCLUDE !== true) die();
 ?>
+
 <div class="left-content">
     <div class="main__menu">
-        <div class="menu__item">
-            <div class="menu__item-wrap">
-                <a class="item__link" href="http://framework/development/ready_solutions/">Готовые решения</a>
-                <a class="submenu__btn" href="#"></a>
-            </div>
-            <div class="submenu">
-                <div class="submenu__item">
-                    <a href="http://framework/development/ready_solutions/paragraph_1/">
-                        Подпункт1
-                    </a>
+        <?
+        foreach ($result as $item) {
+            if ($item["SECTION_ID"] == 0) {
+                $link = "http://" . $_SERVER["SERVER_NAME"] . "/" . $_SESSION["blog_code"] . "/" . $item["CODE"] . "/";
+                ?>
+                <div class='menu__item'>
+                    <div class='menu__item-wrap'>
+                        <a class='item__link' href='<? echo $link ?>'><? echo $item["NAME"] ?></a>
+                        <?
+                        foreach ($result as $value) {
+                            if ($value["SECTION_ID"] == $item["ID"]) {
+                                ?>
+                        <a class="submenu__btn" href="#"></a>
+                    </div>
+                    <div class="submenu">
+                                <?
+                                break;
+                            }
+                        }
+                        foreach ($result as $value) {
+                            if ($value["SECTION_ID"] == $item["ID"]) {
+                                $sublink = $link . $value["CODE"] . "/";
+                                ?>
+                        <div class="submenu__item">
+                            <a href="<? echo $sublink ?>"><?echo $value["NAME"] ?></a>
+                        </div>
+                                <?
+                            }
+                        }
+                        ?>
+                    </div>
                 </div>
-                <div class="submenu__item">
-                    <a href="http://framework/development/ready_solutions/paragraph_2/">
-                        Подпункт2
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="menu__item">
-            <div class="menu__item-wrap">
-                <a class="item__link" href="http://framework/development/useful_tips/">Полезные советы</a>
-            </div>
-        </div>
-        <div class="menu__item">
-            <div class="menu__item-wrap">
-                <a class="item__link" href="#">Особенности/баги</a>
-            </div>
-        </div>
-        <div class="menu__item">
-            <div class="menu__item-wrap">
-                <a class="item__link" href="#">Сататьи</a>
-            </div>
-        </div>
-        <div class="menu__item">
-            <div class="menu__item-wrap">
-                <a class="item__link" href="#">Для новичков</a>
-            </div>
-        </div>
-        <div class="menu__item">
-            <div class="menu__item-wrap">
-                <a class="item__link" href="#">Помойка</a>
-            </div>
-        </div>
+                <?
+            }
+        }
+        ?>
     </div>
     <div class="tags-cloud">
         Облако тегов

@@ -86,6 +86,7 @@ class BlogList extends Component{
                 while($item = $items->fetch()) {
                     $this->result[] = $item;
                 }
+                $this->setElementsUri();
                 $this->includeTemplate();
             }
         } else {
@@ -112,6 +113,7 @@ class BlogList extends Component{
                 while($item = $items->fetch()) {
                     $this->result[] = $item;
                 }
+                $this->setElementsUri();
                 $this->includeTemplate();
             } else {
                 Application::getInstance()->set404();
@@ -132,5 +134,33 @@ class BlogList extends Component{
             return true;
         }
         return false;
+    }
+
+    private function setElementsUri() {
+        for ($i = 0; $i < count($this->result); $i++) {
+            $items = SectionTable::getList(array(
+                "select" => array("CODE", "SECTION_ID"),
+                "filter" => array("ID" => $this->result[$i]["SECTION_ID"]),
+            ));
+            $items = $items->fetch();
+            $elementUri = $items["CODE"] . "/" . $this->result[$i]["CODE"];
+            while ($items["SECTION_ID"] != 0) {
+                $items = SectionTable::getList(array(
+                    "select" => array("CODE", "SECTION_ID"),
+                    "filter" => array("ID" => $items["SECTION_ID"]),
+                ));
+                $items = $items->fetch();
+                $elementUri = $items["CODE"] . "/" . $elementUri;
+            }
+            $items = BlogTable::getList(
+                array(
+                    "select" => array("CODE"),
+                    "filter" => array("ID" => $this->result[$i]["BLOG_ID"])
+                )
+            );
+            $items = $items->fetch();
+            $elementUri = "http://" . $_SERVER["SERVER_NAME"] . "/" . $items["CODE"] . "/" . $elementUri;
+            $this->result[$i]["URI"] = $elementUri;
+        }
     }
 }

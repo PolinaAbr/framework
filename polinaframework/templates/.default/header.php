@@ -2,13 +2,13 @@
 if (!defined('PF_CORE_INCLUDE') || PF_CORE_INCLUDE !== true) die();
 $app = \Polinaframework\Core\Application::getInstance();
 $path = $app->getTemplatePath(false);
+$app->setProperty("title", "База знаний");
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
-    <? $app->setProperty("title", "База знаний");?>
     <title><? $app->showProperty("title")?></title>
     <link rel="shortcut icon" href=<? echo $path . "/img/favicon.ico"?> type="image/x-icon">
     <meta name="format-detection" content="telephone=no"><!-- отключение преобразования телефонов в ссылке на IOS -->
@@ -61,10 +61,5 @@ $path = $app->getTemplatePath(false);
                     <? if (!$app->isMain()) :  $app->includeComponent("left.menu");
                     endif ?>
                     <div class="right-content">
-                        <div class="breadcrumbs">
-                            <a href="#">Разработка</a> >
-                            <a href="#">Готовые рашения</a> >
-                            <a href="#">Подпункт1</a> >
-                            <span>Заголовок</span>
-                        </div>
+                        <? $app->includeComponent("nav.chain") ?>
                         <h1>Заголовок</h1>

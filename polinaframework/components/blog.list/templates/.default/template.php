@@ -5,7 +5,9 @@ for ($i = 0; $i < count($result); $i++) {
 
 <div class="list__item">
     <div class="item__head">
-        <a href="#"><? echo $result[$i]["NAME"] ?></a>
+        <a href="<? echo $result[$i]["URI"]?>">
+            <? echo $result[$i]["NAME"] ?>
+        </a>
     </div>
     <div class="item__text">
         <? echo $result[$i]["PREVIEW_TEXT"] ?>
